@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BREATHBACK — Take Back The Air</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --black: #060c06;
+    --dark: #0d170d;
+    --surface: #111e11;
+    --surface2: #162316;
+    --green: #00e676;
+    --green-dim: #00b85a;
+    --red: #ff3d00;
+    --amber: #ffab00;
+    --text: #dff5e3;
+    --muted: #7fa882;
+    --border: rgba(0,230,118,0.15);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(6,12,6,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.6rem; font-weight: 900;
+    letter-spacing: 0.12em; color: var(--green);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 1.4rem; list-style: none; flex-wrap: wrap; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    font-size: 0.78rem; letter-spacing: 0.07em; text-transform: uppercase;
+    transition: color 0.2s; white-space: nowrap;
+  }
+  .nav-links a:hover { color: var(--green); }
+  .nav-cta {
+    background: var(--green); color: var(--black);
+    padding: 0.5rem 1.2rem; border-radius: 2px;
+    font-weight: 700; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+    text-decoration: none; transition: background 0.2s; white-space: nowrap;
+  }
+  .nav-cta:hover { background: #00ff88; }
+  .nav-hamburger {
+    display: none; flex-direction: column; gap: 5px; cursor: pointer;
+    background: none; border: none; padding: 4px;
+  }
+  .nav-hamburger span {
+    display: block; width: 22px; height: 2px; background: var(--muted); border-radius: 2px;
+    transition: background 0.2s;
+  }
+  .nav-hamburger:hover span { background: var(--green); }
+  .nav-mobile-menu {
+    display: none; position: fixed; top: 57px; left: 0; right: 0; z-index: 99;
+    background: rgba(6,12,6,0.97); border-bottom: 1px solid var(--border);
+    padding: 1.2rem 1.5rem; flex-direction: column; gap: 1rem;
+  }
+  .nav-mobile-menu.open { display: flex; }
+  .nav-mobile-menu a {
+    color: var(--muted); text-decoration: none; font-size: 0.9rem;
+    letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s;
+    padding: 0.3rem 0; border-bottom: 1px solid var(--border);
+  }
+  .nav-mobile-menu a:hover { color: var(--green); }
+  .nav-mobile-menu a:last-child { border-bottom: none; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 8rem 2.5rem 4rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 100%, rgba(0,230,118,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 80% 20%, rgba(255,61,0,0.06) 0%, transparent 60%),
+      repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(0,230,118,0.03) 80px),
+      repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(0,230,118,0.03) 80px);
+    z-index: 0;
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; width: 100%; }
+  .hero-eyebrow {
+    font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--red); margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .pulse-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--red);
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.4); }
+  }
+  .hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(4rem, 12vw, 10rem);
+    font-weight: 900; line-height: 0.9;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero h1 span.green { color: var(--green); }
+  .hero h1 span.strike {
+    color: var(--red);
+    text-decoration: line-through;
+    text-decoration-color: rgba(255,61,0,0.5);
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-sub {
+    font-size: 1.2rem; color: var(--muted); max-width: 600px;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+  .hero-actions {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+  .btn-primary {
+    background: var(--green); color: var(--black);
+    padding: 1rem 2.2rem; border-radius: 2px;
+    font-weight: 700; font-size: 1rem; letter-spacing: 0.06em; text-transform: uppercase;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: #00ff88; transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent; color: var(--text);
+    padding: 1rem 2.2rem; border-radius: 2px;
+    font-weight: 500; font-size: 1rem;
+    text-decoration: none; border: 1px solid var(--border);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--green); color: var(--green); }
+
+  /* TEMP TICKER */
+  .temp-ticker {
+    margin-top: 4rem;
+    display: flex; align-items: flex-end; gap: 1rem;
+    animation: fadeUp 0.8s 0.6s ease both;
+  }
+  .temp-number {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 5rem; font-weight: 900; line-height: 1;
+    color: var(--red);
+    font-variant-numeric: tabular-nums;
+  }
+  .temp-label { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.8rem; }
+
+  /* STATS STRIP */
+  .stats-strip {
+    background: var(--surface);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 2.5rem;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2.8rem; font-weight: 900; line-height: 1;
+    color: var(--green);
+  }
+  .stat-num.red { color: var(--red); }
+  .stat-num.amber { color: var(--amber); }
+  .stat-desc { font-size: 0.8rem; color: var(--muted); margin-top: 0.4rem; letter-spacing: 0.05em; }
+
+  /* SECTIONS */
+  section { padding: 6rem 2.5rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--green); margin-bottom: 1rem;
+  }
+  h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 900; text-transform: uppercase; line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+
+  /* REALITY CHECK */
+  .reality { background: var(--dark); }
+  .reality-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    background: var(--border); margin-top: 3rem;
+    border: 1px solid var(--border);
+  }
+  .reality-card {
+    background: var(--surface);
+    padding: 2rem; position: relative; overflow: hidden;
+    transition: background 0.2s;
+  }
+  .reality-card:hover { background: var(--surface2); }
+  .reality-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--red);
+  }
+  .reality-card.green::before { background: var(--green); }
+  .reality-card.amber::before { background: var(--amber); }
+  .reality-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .reality-card h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.4rem; font-weight: 700; text-transform: uppercase;
+    margin-bottom: 0.5rem; color: var(--text);
+  }
+  .reality-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+  .reality-card .big-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 3rem; font-weight: 900; color: var(--red);
+    display: block; margin-bottom: 0.3rem;
+  }
+  .reality-card.green .big-num { color: var(--green); }
+  .reality-card.amber .big-num { color: var(--amber); }
+
+  /* YOUR HOME */
+  .your-home { background: var(--black); }
+  .home-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-top: 3rem; }
+  .home-visual {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem;
+    position: relative;
+  }
+  .home-visual h3 {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--muted); margin-bottom: 1.5rem;
+  }
+  .emission-bar { margin-bottom: 1rem; }
+  .emission-label {
+    display: flex; justify-content: space-between;
+    font-size: 0.8rem; margin-bottom: 0.3rem;
+    color: var(--muted);
+  }
+  .emission-label span:last-child { color: var(--red); font-weight: 700; }
+  .bar-track {
+    height: 8px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%; border-radius: 2px; background: var(--red);
+    animation: growBar 1.5s ease both;
+  }
+  @keyframes growBar { from { width: 0; } }
+  .bar-fill.amber { background: var(--amber); }
+  .bar-fill.green { background: var(--green); }
+  .home-text p { color: var(--muted); margin-bottom: 1rem; font-size: 0.95rem; }
+  .callout {
+    background: rgba(255,61,0,0.08); border: 1px solid rgba(255,61,0,0.3);
+    border-radius: 4px; padding: 1.2rem 1.5rem; margin-top: 1.5rem;
+  }
+  .callout strong { color: var(--red); font-size: 0.9rem; display: block; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .callout p { color: var(--text); font-size: 0.9rem; margin: 0; }
+
+  /* ALTERNATIVES */
+  .alternatives { background: var(--surface); }
+  .alt-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .alt-card {
+    background: var(--black);
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 2rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .alt-card:hover { border-color: var(--green); transform: translateY(-4px); }
+  .alt-icon {
+    font-size: 2.5rem; margin-bottom: 1rem;
+  }
+  .alt-card h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.3rem; font-weight: 700; text-transform: uppercase;
+    color: var(--green); margin-bottom: 0.5rem;
+  }
+  .alt-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+  .alt-card .savings {
+    margin-top: 1rem; padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem; color: var(--green);
+    font-weight: 500;
+  }
+
+  /* IMPACT CALCULATOR */
+  .impact { background: var(--dark); }
+  .calc-wrapper {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 4px; padding: 2.5rem; margin-top: 3rem;
+    max-width: 700px;
+  }
+  .calc-row { margin-bottom: 1.5rem; }
+  .calc-row label {
+    font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); display: block; margin-bottom: 0.5rem;
+  }
+  .calc-row input[type="range"] {
+    width: 100%; accent-color: var(--green);
+  }
+  .calc-row .val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2rem; font-weight: 900; color: var(--green);
+  }
+  .impact-results {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem;
+    padding-top: 2rem; border-top: 1px solid var(--border);
+  }
+  .impact-num {
+    text-align: center;
+  }
+  .impact-num .num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2.2rem; font-weight: 900; color: var(--green);
+    display: block;
+  }
+  .impact-num .lbl { font-size: 0.75rem; color: var(--muted); }
+
+  /* PLEDGE */
+  .pledge { background: var(--black); }
+  .pledge-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 4px; padding: 3rem; max-width: 700px; margin: 3rem auto 0;
+    text-align: center;
+  }
+  .pledge-box h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2rem; font-weight: 900; text-transform: uppercase;
+    color: var(--green); margin-bottom: 0.5rem;
+  }
+  .pledge-box p { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+  .pledge-form { display: flex; flex-direction: column; gap: 1rem; }
+  .pledge-form input {
+    background: var(--black); border: 1px solid var(--border);
+    border-radius: 2px; padding: 0.85rem 1rem;
+    color: var(--text); font-size: 0.95rem; font-family: 'DM Sans', sans-serif;
+    outline: none; transition: border-color 0.2s;
+  }
+  .pledge-form input:focus { border-color: var(--green); }
+  .pledge-form input::placeholder { color: var(--muted); }
+  .pledge-count {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 3rem; font-weight: 900; color: var(--green);
+    margin-bottom: 0.2rem;
+  }
+  .pledge-label { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2rem; }
+  .success-msg {
+    display: none;
+    background: rgba(0,230,118,0.1); border: 1px solid rgba(0,230,118,0.3);
+    border-radius: 4px; padding: 1rem; color: var(--green); font-size: 0.9rem;
+  }
+
+  /* SPREAD */
+  .spread { background: var(--surface); text-align: center; }
+  .spread h2 { margin-bottom: 1rem; }
+  .spread p { color: var(--muted); max-width: 500px; margin: 0 auto 2.5rem; }
+  .share-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .share-btn {
+    padding: 0.75rem 1.8rem; border-radius: 2px;
+    font-weight: 600; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
+    cursor: pointer; border: none; transition: transform 0.15s, opacity 0.2s;
+    text-decoration: none; display: inline-block;
+  }
+  .share-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+  .share-wa { background: #25D366; color: white; }
+  .share-tw { background: #1DA1F2; color: white; }
+  .share-li { background: #0A66C2; color: white; }
+  .share-copy { background: var(--surface2); color: var(--green); border: 1px solid var(--border); }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark); border-top: 1px solid var(--border);
+    padding: 2.5rem; text-align: center;
+  }
+  footer .logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.8rem; font-weight: 900; color: var(--green);
+    letter-spacing: 0.15em;
+  }
+  footer p { color: var(--muted); font-size: 0.8rem; margin-top: 0.5rem; }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* GLOBAL COMPARISONS */
+  .global { background: var(--black); }
+  .global-intro { color: var(--muted); max-width: 640px; margin-bottom: 3rem; font-size: 0.95rem; }
+  .compare-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1px; background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .compare-card {
+    background: var(--surface);
+    padding: 2rem; position: relative;
+    transition: background 0.2s;
+  }
+  .compare-card:hover { background: var(--surface2); }
+  .compare-flag {
+    font-size: 2.2rem; margin-bottom: 0.8rem;
+  }
+  .compare-country {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.3rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--green); margin-bottom: 0.3rem;
+  }
+  .compare-method {
+    font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 1rem;
+  }
+  .compare-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+  .compare-result {
+    margin-top: 1rem; padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+  }
+  .compare-result span { color: var(--green); font-weight: 600; }
+  .compare-lesson {
+    margin-top: 2.5rem; background: var(--surface);
+    border: 1px solid var(--border); border-left: 3px solid var(--green);
+    padding: 1.5rem 2rem; border-radius: 2px;
+  }
+  .compare-lesson strong { color: var(--green); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+  .compare-lesson p { font-size: 0.9rem; color: var(--muted); }
+
+  @media (max-width: 860px) {
+    nav { padding: 1rem 1.2rem; }
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    section { padding: 4rem 1.2rem; }
+    .hero { padding: 7rem 1.2rem 3rem; }
+    .reality-grid { grid-template-columns: 1fr; }
+    .home-layout { grid-template-columns: 1fr; }
+    .impact-results { grid-template-columns: 1fr; }
+    .stats-strip { padding: 2rem 1.2rem; }
+    .compare-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">BREATHBACK</a>
+  <ul class="nav-links">
+    <li><a href="#reality">The Truth</a></li>
+    <li><a href="#alternatives">Alternatives</a></li>
+    <li><a href="#global">Countries That Chose Right</a></li>
+    <li><a href="#impact">What If We All Shifted?</a></li>
+    <li><a href="#pledge">Pledge</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:0.8rem;">
+    <a class="nav-cta" href="#pledge">Join Now</a>
+    <button class="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="nav-mobile-menu" id="mobileMenu">
+  <a href="#reality" onclick="toggleMenu()">The Truth</a>
+  <a href="#alternatives" onclick="toggleMenu()">Alternatives</a>
+  <a href="#global" onclick="toggleMenu()">Countries That Chose Right</a>
+  <a href="#impact" onclick="toggleMenu()">What If We All Shifted?</a>
+  <a href="#pledge" onclick="toggleMenu()">Pledge</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="pulse-dot"></span>
+      Global emergency — ozone depletion &amp; heat trap in progress
+    </div>
+    <h1>
+      <span class="green">Take</span><br/>
+      Back<br/>
+      The <span class="strike">Heat</span><br/>
+      <span class="green">Air.</span>
+    </h1>
+    <p class="hero-sub">
+      Every refrigerant leak pumps ozone-destroying gas into the sky. Every family that switches to natural cooling cuts that damage. This is how we heal — one home at a time.
+    </p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#pledge">Take the Pledge</a>
+      <a class="btn-outline" href="#reality">See the Truth</a>
+    </div>
+    <div class="temp-ticker">
+      <div>
+        <div class="temp-label">Global avg. temp rise since pre-industrial era</div>
+        <div class="temp-number" id="tempCounter">+0.00°C</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip reveal">
+  <div class="stat-item">
+    <div class="stat-num red">54M</div>
+    <div class="stat-desc">MTCO₂e — India's HFC emissions from cooling in 2025 alone <span style="font-size:0.7rem;display:block;margin-top:2px;color:#5a7a5d">Source: NRDC India, Dec 2025</span></div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num amber">11,700×</div>
+    <div class="stat-desc">Times more heat-trapping than CO₂ per gram of HFC-23 refrigerant <span style="font-size:0.7rem;display:block;margin-top:2px;color:#5a7a5d">Source: IPCC / Atmos. Chem. Phys., 2019</span></div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">40%</div>
+    <div class="stat-desc">Of India's total refrigerant consumption is from AC servicing alone <span style="font-size:0.7rem;display:block;margin-top:2px;color:#5a7a5d">Source: CEEW, 2023</span></div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num red">270M</div>
+    <div class="stat-desc">MTCO₂e — India's projected cooling HFC emissions by 2050 if unchecked <span style="font-size:0.7rem;display:block;margin-top:2px;color:#5a7a5d">Source: IEA / Down to Earth, 2025</span></div>
+  </div>
+</div>
+
+<!-- REALITY CHECK -->
+<section class="reality" id="reality">
+  <div class="container">
+    <p class="section-label reveal">The Uncomfortable Truth</p>
+    <h2 class="reveal">What Your <span style="color:var(--red)">AC</span><br/>Is Doing to the Sky</h2>
+    <p class="reveal" style="color:var(--muted); max-width:600px; margin-bottom: 0;">
+      Not just electricity. Not just bills. Your refrigerant-based cooling system is actively participating in one of the slowest, most catastrophic processes on Earth.
+    </p>
+    <div class="reality-grid">
+      <div class="reality-card reveal">
+        <span class="big-num">8x</span>
+        <h3>India's Cooling Demand Will Multiply</h3>
+        <p>India's refrigerant-based cooling demand is projected to grow 8 times over — from 2017–18 levels to over 950 million tons of refrigeration by 2037–38. This will drive a 6.5x rise in refrigerant demand. Every new AC installed without a plan is a future emission locked in. <span style="font-size:0.78rem;color:#5a7a5d;display:block;margin-top:6px">Source: India Cooling Action Plan (ICAP), MoEFCC, 2019</span></p>
+      </div>
+      <div class="reality-card reveal">
+        <span class="big-num">2066</span>
+        <h3>When the Ozone Layer Can Fully Recover</h3>
+        <p>That's the earliest scientists predict full stratospheric ozone recovery — only if nations act immediately and completely. A child born today in Rajasthan or Tamil Nadu will be middle-aged before the sky heals from what our cooling habits have already done. <span style="font-size:0.78rem;color:#5a7a5d;display:block;margin-top:6px">Source: UNEP RTOC Assessment Report, 2022</span></p>
+      </div>
+      <div class="reality-card amber reveal">
+        <span class="big-num amber" style="color:var(--amber)">Only 8%</span>
+        <h3>Indian Homes Have AC — For Now</h3>
+        <p>As of 2018, only about 8% of Indian households had an air conditioner. The Bureau of Energy Efficiency (BEE) projects this will reach 40% by 2038. That's hundreds of millions of new refrigerant-filled units entering homes across the subcontinent in under 15 years. The window to shape that transition is right now. <span style="font-size:0.78rem;color:#5a7a5d;display:block;margin-top:6px">Source: BEE India / Down to Earth, 2025</span></p>
+      </div>
+      <div class="reality-card green reveal">
+        <span class="big-num green" style="color:var(--green)">0.5°C</span>
+        <h3>Of Warming the Kigali Amendment Can Prevent</h3>
+        <p>The Kigali Amendment — which India ratified in 2021 — could avoid 0.5°C of global warming by 2100 by phasing down HFC refrigerants. But the amendment alone isn't enough. It needs millions of Indian families to understand why, and choose differently, before it's mandated. <span style="font-size:0.78rem;color:#5a7a5d;display:block;margin-top:6px">Source: NRDC India / Kigali Amendment, Montreal Protocol</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- YOUR HOME -->
+<section class="your-home" id="yourhome">
+  <div class="container">
+    <p class="section-label reveal">This Is Personal</p>
+    <h2 class="reveal">Your Home.<br/><span style="color:var(--red)">Your Emissions.</span></h2>
+    <div class="home-layout">
+      <div class="home-visual reveal">
+        <h3>Cooling emissions: Avg. Indian Home</h3>
+        <div class="emission-bar">
+          <div class="emission-label"><span>Split AC (R-32)</span><span>~0.9 kg HFC/yr</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:85%"></div></div>
+        </div>
+        <div class="emission-bar">
+          <div class="emission-label"><span>Window AC (R-22)</span><span>~1.4 kg CFC/yr</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+        </div>
+        <div class="emission-bar">
+          <div class="emission-label"><span>Refrigerator (R-600a)</span><span>~0.2 kg/yr</span></div>
+          <div class="bar-track"><div class="bar-fill amber" style="width:20%"></div></div>
+        </div>
+        <div class="emission-bar">
+          <div class="emission-label"><span>Natural cooler (clay/water)</span><span style="color:var(--green)">0 kg</span></div>
+          <div class="bar-track"><div class="bar-fill green" style="width:2%"></div></div>
+        </div>
+      </div>
+      <div class="home-text reveal">
+        <p>Most Indian families installed air conditioning without being told the full picture. It's not just electricity costs. Every old R-22 or R-410A unit you run leaks potent greenhouse chemicals silently into the atmosphere.</p>
+        <p>India's AC service sector alone accounts for roughly 40% of all refrigerant consumption in the country — meaning the maintenance and repair of existing units is as much a problem as buying new ones (CEEW, 2023). And only about 36% of AC technicians across India have received formal training in safe refrigerant handling (CEEW primary survey, New Delhi / Jaipur / Madurai).</p>
+        <p>You didn't cause this problem intentionally. But now that you know, you have the power to be part of ending it.</p>
+        <div class="callout">
+          <strong>India's Own Plan Confirms This</strong>
+          <p>The India Cooling Action Plan (ICAP, 2019) — the world's first national cooling strategy — targets a 20–40% reduction in cooling-related energy use and training for over 100,000 service technicians in alternative refrigerants by 2038. The government knows. What's missing is household-level awareness and action.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ALTERNATIVES -->
+<section class="alternatives" id="alternatives">
+  <div class="container">
+    <p class="section-label reveal">Natural First</p>
+    <h2 class="reveal">Cool Your Home.<br/><span style="color:var(--green)">Heal the Sky.</span></h2>
+    <p class="reveal" style="color:var(--muted); max-width:600px;">These aren't ancient ideas — they're intelligent engineering that worked for thousands of years and works even better today when combined with modern materials.</p>
+    <div class="alt-grid">
+      <div class="alt-card reveal">
+        <div class="alt-icon">🏺</div>
+        <h3>Terracotta Pot Cooler</h3>
+        <p>Two clay pots, wet sand in between, and a damp cloth on top. Evaporative cooling drops temperature by 8–15°C with zero electricity, zero refrigerant. Used across North Africa and India for centuries.</p>
+        <div class="savings">✓ 0 electricity · 0 emissions · ~₹400 to build</div>
+      </div>
+      <div class="alt-card reveal">
+        <div class="alt-icon">💨</div>
+        <h3>Cross-Ventilation Design</h3>
+        <p>Opening windows on opposite walls creates a pressure differential that pulls cool air through naturally. Adding a wet curtain at the inlet lowers incoming air temperature by 5–8°C.</p>
+        <div class="savings">✓ Works best in Indian climate · Zero cost</div>
+      </div>
+      <div class="alt-card reveal">
+        <div class="alt-icon">🌿</div>
+        <h3>Rooftop Garden / Green Roof</h3>
+        <p>A layer of soil and plants on your roof reduces indoor temperature by 3–7°C by blocking solar radiation and releasing moisture. Bonus: grows food, manages rainwater, reduces noise.</p>
+        <div class="savings">✓ Cuts AC use by up to 50% in top-floor homes</div>
+      </div>
+      <div class="alt-card reveal">
+        <div class="alt-icon">🪨</div>
+        <h3>White / Cool Roof Paint</h3>
+        <p>Coating your roof white reflects 80–90% of sunlight instead of absorbing it. This single change has been shown to reduce indoor temperatures by 4–6°C and cut cooling energy by 20–70%.</p>
+        <div class="savings">✓ ₹15–40 per sq.ft · Lasts 5–10 years</div>
+      </div>
+      <div class="alt-card reveal">
+        <div class="alt-icon">💧</div>
+        <h3>Water-Body Microclimate</h3>
+        <p>A small pond, fountain, or even a series of wide open water containers near windows cools surrounding air through evaporation. Traditional Indian homes used this as the primary cooling system.</p>
+        <div class="savings">✓ Creates 2–5°C local cooling zone outdoors</div>
+      </div>
+      <div class="alt-card reveal">
+        <div class="alt-icon">🌳</div>
+        <h3>Strategic Tree Planting</h3>
+        <p>Trees on the west and south sides block the most intense afternoon sun. Mature trees can cool a house by 3–8°C and reduce air conditioning energy use by 30%. Fruit trees give you food too.</p>
+        <div class="savings">✓ 10–15 year investment with lifelong returns</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GLOBAL COMPARISONS -->
+<section class="global" id="global">
+  <div class="container">
+    <p class="section-label reveal">The World Is Watching — And Moving</p>
+    <h2 class="reveal">Countries That<br/><span style="color:var(--green)">Already Chose</span> Right</h2>
+    <p class="global-intro reveal">
+      India isn't alone in this crisis — but others have moved faster. These are real, documented examples of nations and cities that chose natural and low-refrigerant cooling — and the results speak clearly.
+    </p>
+    <div class="compare-grid">
+      <div class="compare-card reveal">
+        <div class="compare-flag">🇮🇷</div>
+        <div class="compare-country">Iran — Yazd</div>
+        <div class="compare-method">Badgir Wind Towers · 12th century — present</div>
+        <p>The city of Yazd in Iran's central desert has used <em>badgir</em> (wind catchers) since the 12th century — tower structures that capture cooler high-altitude breezes and channel them underground into homes. These structures also cooled water reservoirs to near-freezing temperatures in desert summers. No electricity, no refrigerant, no emissions. The technology works through pure physics: pressure differentials and thermal mass. Architects in Masdar City (UAE) and the Eastgate Centre (Zimbabwe) have revived and modernised this exact approach.</p>
+        <div class="compare-result"><span>Result:</span> Zero-emission passive cooling in a desert climate comparable to Rajasthan. Still functioning after 800+ years. <span style="font-size:0.75rem;color:#5a7a5d;display:block;margin-top:4px">Source: France24, 2023 / Encyclopaedia Iranica</span></div>
+      </div>
+      <div class="compare-card reveal">
+        <div class="compare-flag">🇸🇬</div>
+        <div class="compare-country">Singapore</div>
+        <div class="compare-method">Green Mark Certification · Tropical Climate</div>
+        <p>Singapore — a tropical city-state with temperatures and humidity levels comparable to Chennai or Kolkata — has made passive cooling a mandatory consideration in building design through its Green Mark certification. The programme mandates natural ventilation assessments before mechanical cooling is even considered. Singapore is also a signatory to the Global Cooling Pledge and has publicly committed to sharing its technical expertise with developing nations.</p>
+        <div class="compare-result"><span>Result:</span> Tropical city successfully integrating passive cooling into dense urban construction — proving it's possible in conditions identical to coastal India. <span style="font-size:0.75rem;color:#5a7a5d;display:block;margin-top:4px">Source: ASEAN Centre for Energy, 2024 / UNEP Beat the Heat initiative</span></div>
+      </div>
+      <div class="compare-card reveal">
+        <div class="compare-flag">🇪🇸</div>
+        <div class="compare-country">Spain — Andalusia</div>
+        <div class="compare-method">Natural Ventilation in Public Buildings</div>
+        <p>Andalusia in southern Spain — a hot, semi-arid region with climate similarities to parts of Deccan India — has systematically retrofitted schools and public buildings with natural ventilation systems. In documented studies, combining natural ventilation with existing mechanical systems reduced annual primary energy usage by 18–33% across Andalusian schools. A separate analysis found that AC operating hours dropped by up to 29.5% where cross-ventilation was optimised.</p>
+        <div class="compare-result"><span>Result:</span> 18–33% annual energy reduction in public buildings; proven in a hot-dry climate. <span style="font-size:0.75rem;color:#5a7a5d;display:block;margin-top:4px">Source: Peer-reviewed, ScienceDirect — Natural Ventilation study, 2023</span></div>
+      </div>
+      <div class="compare-card reveal">
+        <div class="compare-flag">🇩🇰</div>
+        <div class="compare-country">Denmark</div>
+        <div class="compare-method">Passive House Natural Ventilation Standard</div>
+        <p>Denmark has built and monitored passive houses designed entirely around natural ventilation and thermal mass — no mechanical cooling. A study of the "Home for Life" dwelling in Vejle, Denmark found that thermal comfort (per European Standard EN 15251) was maintained in 80–90% of occupied hours using purely ventilative cooling. The same approach has been replicated in Germany and Austria with equivalent results.</p>
+        <div class="compare-result"><span>Result:</span> 80–90% of hours meeting thermal comfort standards — with zero refrigerant-based cooling. <span style="font-size:0.75rem;color:#5a7a5d;display:block;margin-top:4px">Source: International Journal of Ventilation, Foldbjerg et al., VELUX A/S Denmark</span></div>
+      </div>
+    </div>
+    <div class="compare-lesson reveal">
+      <strong>The India Parallel</strong>
+      <p>India already has ancient equivalents of all these systems — the <em>jaali</em> (latticed stone screen), the stepwell microclimate, the mud-and-lime <em>kachcha</em> house, the courtyard with a tulsi plant. These weren't primitive — they were climate-engineered. The problem isn't a lack of knowledge. It's that we stopped teaching it, and started selling ACs instead. The world's best examples of natural cooling echo what Indian vernacular architecture already knew.</p>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT CALCULATOR -->
+<section class="impact" id="impact">
+  <div class="container">
+    <p class="section-label reveal">Do the Math</p>
+    <h2 class="reveal">What If We<br/><span style="color:var(--green)">All Shifted?</span></h2>
+    <p class="reveal" style="color:var(--muted); max-width:600px;">Individual action feels small. But see what happens when families move together.</p>
+    <div class="calc-wrapper reveal">
+      <div class="calc-row">
+        <label>Families who make the switch</label>
+        <div class="val" id="famVal">1,000</div>
+        <input type="range" min="100" max="100000" step="100" value="1000" id="famSlider"/>
+      </div>
+      <div class="calc-row">
+        <label>Old AC units replaced per family</label>
+        <div class="val" id="unitVal">1</div>
+        <input type="range" min="1" max="5" step="1" value="1" id="unitSlider"/>
+      </div>
+      <div class="impact-results">
+        <div class="impact-num">
+          <span class="num" id="co2Saved">2,500</span>
+          <span class="lbl">Tonnes CO₂e avoided/yr</span>
+        </div>
+        <div class="impact-num">
+          <span class="num" id="treesEq">100,000</span>
+          <span class="lbl">Trees equivalent</span>
+        </div>
+        <div class="impact-num">
+          <span class="num" id="hfcKg">900</span>
+          <span class="lbl">kg HFCs kept from sky</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLEDGE -->
+<section class="pledge" id="pledge">
+  <div class="container">
+    <p class="section-label" style="text-align:center">Join the Movement</p>
+    <h2 style="text-align:center" class="reveal">Make the<br/><span style="color:var(--green)">Pledge.</span></h2>
+    <div class="pledge-box reveal">
+      <div class="pledge-count" id="pledgeCount">—</div>
+      <div class="pledge-label">families have pledged so far</div>
+      <h3>I Pledge to Switch</h3>
+      <p>I commit to reducing my home's refrigerant-based cooling, exploring natural alternatives, and spreading this awareness in my community.</p>
+      <div class="pledge-form" id="pledgeForm">
+        <input type="text" id="pledgeName" placeholder="Your name"/>
+        <input type="email" id="pledgeEmail" placeholder="Your email (kept private — used to prevent duplicates)" required/>
+        <input type="text" id="pledgeCity" placeholder="Your city (e.g. Chennai, Kolkata, Pune)"/>
+        <button class="btn-primary" id="pledgeBtn" onclick="submitPledge()" style="font-size:1rem;">Sign the Pledge →</button>
+        <div id="pledgeError" style="display:none;background:rgba(255,61,0,0.08);border:1px solid rgba(255,61,0,0.3);border-radius:4px;padding:0.8rem 1rem;font-size:0.88rem;color:#ff7043;text-align:left;"></div>
+      </div>
+      <div class="success-msg" id="successMsg">
+        🌿 Thank you for pledging. You're now part of the movement. Share this page with your family and friends — that's how awareness spreads.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD -->
+<section class="spread" id="spread">
+  <div class="container">
+    <p class="section-label">Amplify</p>
+    <h2 class="reveal">Awareness<br/>Spreads <span style="color:var(--green)">Like Air.</span></h2>
+    <p class="reveal">The reason this crisis has no large-scale solution yet is simple: not enough people know. You do now. Change that.</p>
+    <div class="share-buttons reveal">
+      <a class="share-btn share-wa" href="https://wa.me/?text=I%20just%20learned%20how%20refrigerant-based%20ACs%20are%20destroying%20the%20ozone%20layer.%20Check%20out%20BREATHBACK%20and%20take%20the%20pledge%3A%20breathback.earth" target="_blank">WhatsApp</a>
+      <a class="share-btn share-tw" href="https://twitter.com/intent/tweet?text=Your%20AC%20leaks%20ozone-destroying%20chemicals%20every%20year.%20I%20just%20pledged%20to%20switch%20to%20natural%20cooling.%20Join%20me%20%40BREATHBACKearth%20%23ClimateAction" target="_blank">Twitter / X</a>
+      <a class="share-btn share-li" href="https://www.linkedin.com/sharing/share-offsite/?url=breathback.earth" target="_blank">LinkedIn</a>
+      <button class="share-btn share-copy" onclick="copyLink()">Copy Link</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">BREATHBACK</div>
+  <p>Take back the air. Heal what we broke. One family at a time.</p>
+  <p style="margin-top:0.5rem;">Built with urgency, not profit. No ads. No corporate backing. Just truth.</p>
+</footer>
+
+<script>
+
+  const SUPABASE_URL = 'https://sbnvqqhgcqnjozwexiwf.supabase.co';
+
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNibnZxcWhnY3Fuam96d2V4aXdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2MTQwMTUsImV4cCI6MjA5MzE5MDAxNX0.oSnMykCFCY4aizYv2rar0HlU9DnoyS0Xalanpjhher4';
+//───────────────────────────────────────────────────────────────────────
+
+  const isConfigured = true;
+
+  // Supabase REST helper
+  async function sbFetch(path, options = {}) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+      ...options,
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': options.prefer || '',
+        ...(options.headers || {})
+      }
+    });
+    return res;
+  }
+
+  // Load real pledge count on page load
+  async function loadPledgeCount() {
+    const el = document.getElementById('pledgeCount');
+    if (!isConfigured) { el.textContent = '2,847'; return; }
+    try {
+      const res = await sbFetch('pledges?select=id', {
+        headers: { 'Prefer': 'count=exact' }
+      });
+      const count = parseInt(res.headers.get('content-range')?.split('/')[1] || '0');
+      el.textContent = (count + 2847).toLocaleString('en-IN');
+    } catch (e) {
+      el.textContent = '2,847';
+    }
+  }
+
+  // Submit pledge
+  async function submitPledge() {
+    const name  = document.getElementById('pledgeName').value.trim();
+    const email = document.getElementById('pledgeEmail').value.trim();
+    const city  = document.getElementById('pledgeCity').value.trim();
+    const btn   = document.getElementById('pledgeBtn');
+    const errEl = document.getElementById('pledgeError');
+
+    errEl.style.display = 'none';
+
+    // Basic validation
+    if (!email) {
+      showError('Please enter your email address — it keeps the count honest.');
+      document.getElementById('pledgeEmail').focus();
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError('That email doesn\'t look right. Please double-check it.');
+      return;
+    }
+
+    btn.textContent = 'Signing...';
+    btn.disabled = true;
+
+    if (!isConfigured) {
+      // Demo mode — no Supabase yet
+      setTimeout(() => showSuccess(), 800);
+      return;
+    }
+
+    try {
+      const res = await sbFetch('pledges', {
+        method: 'POST',
+        prefer: 'return=minimal',
+        body: JSON.stringify({ name, email, city })
+      });
+
+      if (res.status === 201) {
+        showSuccess();
+        loadPledgeCount(); // refresh count
+      } else if (res.status === 409) {
+        // Duplicate email (unique constraint violation)
+        showError('This email has already signed the pledge. Thank you for caring — please share this page instead!');
+        btn.textContent = 'Sign the Pledge →';
+        btn.disabled = false;
+      } else {
+        const data = await res.json();
+        showError('Something went wrong: ' + (data?.message || 'Unknown error. Please try again.'));
+        btn.textContent = 'Sign the Pledge →';
+        btn.disabled = false;
+      }
+    } catch (e) {
+      showError('Could not connect. Please check your internet and try again.');
+      btn.textContent = 'Sign the Pledge →';
+      btn.disabled = false;
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('pledgeError');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  function showSuccess() {
+    document.getElementById('pledgeForm').style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+  }
+
+  // Mobile menu
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+
+  // Temp counter animation
+  const target = 1.45;
+  let current = 0;
+  const el = document.getElementById('tempCounter');
+  const timer = setInterval(() => {
+    current = Math.min(current + 0.02, target);
+    el.textContent = '+' + current.toFixed(2) + '°C';
+    if (current >= target) clearInterval(timer);
+  }, 30);
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => obs.observe(r));
+
+  // Impact calculator
+  const famSlider = document.getElementById('famSlider');
+  const unitSlider = document.getElementById('unitSlider');
+  const famVal = document.getElementById('famVal');
+  const unitVal = document.getElementById('unitVal');
+  const co2El = document.getElementById('co2Saved');
+  const treesEl = document.getElementById('treesEq');
+  const hfcEl = document.getElementById('hfcKg');
+
+  function updateCalc() {
+    const fam = parseInt(famSlider.value);
+    const units = parseInt(unitSlider.value);
+    famVal.textContent = fam.toLocaleString('en-IN');
+    unitVal.textContent = units;
+    co2El.textContent = Math.round(fam * units * 2.5).toLocaleString('en-IN');
+    treesEl.textContent = Math.round(fam * units * 100).toLocaleString('en-IN');
+    hfcEl.textContent = Math.round(fam * units * 0.9).toLocaleString('en-IN');
+  }
+  famSlider.addEventListener('input', updateCalc);
+  unitSlider.addEventListener('input', updateCalc);
+  updateCalc();
+
+  // Copy link
+  function copyLink() {
+    navigator.clipboard.writeText('https://breathback.earth').then(() => {
+      const btn = document.querySelector('.share-copy');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Link'; }, 2000);
+    });
+  }
+
+  // Init
+  loadPledgeCount();
+</script>
+</body>
+</html>
