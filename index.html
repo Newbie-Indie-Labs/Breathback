@@ -753,7 +753,7 @@
       <div class="pledge-form" id="pledgeForm">
         <input type="text" id="pledgeName" placeholder="Your name"/>
         <input type="email" id="pledgeEmail" placeholder="Your email (kept private — used to prevent duplicates)" required/>
-        <input type="text" id="pledgeCity" placeholder="Your city (e.g. Chennai, Kolkata, Pune)"/>
+        <input type="text" id="pledgeCity" placeholder="Your city — required (e.g. Chennai, Kolkata, Pune)"/>
         <button class="btn-primary" id="pledgeBtn" onclick="submitPledge()" style="font-size:1rem;">Sign the Pledge →</button>
         <div id="pledgeError" style="display:none;background:rgba(255,61,0,0.08);border:1px solid rgba(255,61,0,0.3);border-radius:4px;padding:0.8rem 1rem;font-size:0.88rem;color:#ff7043;text-align:left;"></div>
       </div>
@@ -843,6 +843,11 @@
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       showError('That email doesn\'t look right. Please double-check it.');
+      return;
+    }
+    if (!city) {
+      showError('Please enter your city — it helps us understand where awareness is growing.');
+      document.getElementById('pledgeCity').focus();
       return;
     }
 
